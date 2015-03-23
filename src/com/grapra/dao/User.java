@@ -20,8 +20,8 @@ public interface User {
 	public boolean addBook(Book book);
 	
 	/**
-	 * 查询所有书籍
+	 * 查询除该用户外其他人发布的所有书籍
 	 * @return
 	 */
-	public List<Book> queryAllBooks();
+	public List<Book> queryAllBooks(String userName);
 }

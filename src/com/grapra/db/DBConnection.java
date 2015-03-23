@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
  *
  */
 public class DBConnection
-	{
+{
 	String DBDRIVER = "com.mysql.jdbc.Driver";
 	String DBURL = "jdbc:mysql://127.0.0.1/grapra";
 	String DBUSER = "root";
