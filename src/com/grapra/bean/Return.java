@@ -8,20 +8,19 @@ package com.grapra.bean;
 public class Return {
 
 	private int returnID;//退货信息ID
-	private int tradingID;//对应的交易信息ID
 	private String statu;//退货状态
-	
+	private Trading trading;//退货对应的交易记录
 	
 	//构造函数
-	public Return(int returnID, int tradingID, String statu) {
+	public Return(int returnID, Trading trading, String statu) {
 		this.returnID = returnID;
-		this.tradingID = tradingID;
+		this.trading = trading;
 		this.statu = statu;
 	}
 	//默认构造函数
 	public Return(){
 		this.returnID = -1;
-		this.tradingID = -1;
+		this.trading = null;
 		this.statu = "";
 	}
 	
@@ -32,11 +31,11 @@ public class Return {
 	public void setReturnID(int returnID) {
 		this.returnID = returnID;
 	}
-	public int getTradingID() {
-		return tradingID;
+	public Trading getTradingID() {
+		return trading;
 	}
-	public void setTradingID(int tradingID) {
-		this.tradingID = tradingID;
+	public void setTrading(Trading trading) {
+		this.trading = trading;
 	}
 	public String getStatu() {
 		return statu;

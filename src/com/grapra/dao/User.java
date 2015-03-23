@@ -4,8 +4,13 @@ import java.util.List;
 
 import com.grapra.bean.Book;
 import com.grapra.bean.Need;
+import com.grapra.bean.Return;
 import com.grapra.bean.Trading;
-
+/**
+ * 
+ * @author 卢佳瑜
+ * 用户功能接口
+ */
 public interface User {
 
 	/**
@@ -65,14 +70,33 @@ public interface User {
 	public boolean ReturnBook(Trading trading);
 	
 	/**
+	 * 该用户被退货申请的纪录
+	 */
+	public List<Return> queryReturn(User user);
+	
+	/**
+	 * 处理退货申请
+	 */
+	public boolean dealReturn(Return returns);
+	
+	/**
 	 * 查询该用户未发货的纪录
 	 */
 	public List<Trading> queryDeliverTrading(User user);
 	
 	/**
+	 * 确认发货操作 
+	 */
+	public boolean ensureDeliver(Trading trading);
+
+	/**
 	 * 查询该用户未收货的纪录
 	 */
 	public List<Trading> queryReceiveTrading(User user);
 	
+	/**
+	 * 确认收货操作
+	 */
+	public boolean ensureReceive(Trading trading);
 	
 }
