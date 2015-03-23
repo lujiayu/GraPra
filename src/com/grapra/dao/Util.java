@@ -8,4 +8,9 @@ public interface Util {
 	 * @return
 	 */
 	public boolean register(User user);
+	
+	/**
+	 * µÇÂ½
+	 */
+	public User login(String userName,String password);
 }
