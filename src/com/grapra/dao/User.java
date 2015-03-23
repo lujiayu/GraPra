@@ -36,7 +36,7 @@ public interface User {
 	 * 书籍购买
 	 * @param book 购买的对应书籍  user 书籍购买人
 	 */
-	public boolean buyBook(Book book,User user);
+	public boolean buyBook(Book book,com.grapra.bean.User user);
 	
 	/**
 	 * 查询所有书籍需求信息
@@ -47,7 +47,7 @@ public interface User {
 	/**
 	 * 查询该用户发布的需求信息
 	 */
-	public List<Need> queryNeed(User user);
+	public List<Need> queryNeed(com.grapra.bean.User user);
 	
 	/**
 	 * 发布需求信息
@@ -62,7 +62,7 @@ public interface User {
 	/**
 	 * 查询该用户已经完成的交易记录
 	 */
-	public List<Trading> queryTrading(User user);
+	public List<Trading> queryTrading(com.grapra.bean.User user);
 	
 	/**
 	 * 申请退货
@@ -72,7 +72,7 @@ public interface User {
 	/**
 	 * 该用户被退货申请的纪录
 	 */
-	public List<Return> queryReturn(User user);
+	public List<Return> queryReturn(com.grapra.bean.User user);
 	
 	/**
 	 * 处理退货申请
@@ -82,7 +82,7 @@ public interface User {
 	/**
 	 * 查询该用户未发货的纪录
 	 */
-	public List<Trading> queryDeliverTrading(User user);
+	public List<Trading> queryDeliverTrading(com.grapra.bean.User user);
 	
 	/**
 	 * 确认发货操作 
@@ -92,7 +92,7 @@ public interface User {
 	/**
 	 * 查询该用户未收货的纪录
 	 */
-	public List<Trading> queryReceiveTrading(User user);
+	public List<Trading> queryReceiveTrading(com.grapra.bean.User user);
 	
 	/**
 	 * 确认收货操作
