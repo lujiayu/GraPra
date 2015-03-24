@@ -69,7 +69,7 @@ public class UserImpl implements com.grapra.dao.User{
 	public List<Book> queryAllBooks() {
 		// TODO Auto-generated method stub
 		List<Book> list = new ArrayList<Book>();
-		String selectSql="select * from book "; 
+		String selectSql="select * from book where bookStatu= 'Î´³öÊÛ'"; 
 		try{
 		Statement stmt = conn.createStatement();
 		ResultSet re= stmt.executeQuery(selectSql);
