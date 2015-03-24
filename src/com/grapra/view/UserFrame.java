@@ -36,6 +36,7 @@ public class UserFrame extends JFrame{
 	private JButton querySelfNeed;//查询自己的需求信息
 	private JButton issueNeed;//发布需求信息
 	private JButton querySelftrading;//我的交易记录
+	private JButton queryDeliver;//确认发货
 	
 	private JPanel rightPane;//右边存放内容的面板
 	private JTable table;//右边面板中要使用的表格
@@ -50,6 +51,7 @@ public class UserFrame extends JFrame{
 		querySelfNeed = new JButton("我的需求");
 		issueNeed = new JButton("发布需求");
 		querySelftrading = new JButton("我的交易");
+		queryDeliver = new JButton("确认发货");
 	}
 	
 	public User getUser() {
@@ -368,6 +370,77 @@ public class UserFrame extends JFrame{
 		});
 		querySelftrading.setBounds(10, 250, 80, 30);
 		
+		//查询自己没发货的记录，单击确认发货
+		queryDeliver.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				rightPane.removeAll();
+				String[] headers = { "交易ID", "书籍ID", "卖家人姓名","买家姓名" };
+
+				DefaultTableModel model = new DefaultTableModel(null, headers){
+
+					public boolean isCellEditable(int row, int column) {
+						return false;
+					}
+				};
+					table = new JTable(model);
+					
+
+					List<Trading> tradingList = new UserImpl().queryDeliverTrading(user);
+					
+
+					for(Trading trading:tradingList){	
+						model.addRow(new Object[]{trading.getTradingID(), trading.getBookID(),
+								trading.getOwnerID(),trading.getBuyerID()});
+					}
+
+				
+				table.setBackground(Color.gray);
+				table.setBounds(0, 0, 550, 500);
+
+				JScrollPane jsp = new JScrollPane(table);
+				jsp.setBounds(0,0,550,500);
+				
+				rightPane.add(jsp);
+				rightPane.validate();
+				
+				table.addMouseListener(new MouseListener() {
+					public void mousePressed(MouseEvent e) {
+					    // 鼠标按下时的处理
+					}
+					public void mouseReleased(MouseEvent e) {
+					    // 鼠标松开时的处理
+					}
+					public void mouseEntered(MouseEvent e) {
+					    // 鼠标进入表格时的处理
+					}
+					public void mouseExited(MouseEvent e) {
+					    // 鼠标退出表格时的处理
+					}
+					public void mouseClicked(MouseEvent e) {
+					    // 鼠标点击时的处理
+						int selectRows=table.getSelectedRows().length;// 取得用户所选行的行数
+						DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+						if(selectRows==1){
+							int selectedRowIndex = table.getSelectedRow(); // 取得用户所选单行 
+							
+							int tradingID = (int) tableModel.getValueAt(selectedRowIndex, 0);
+							System.out.println(tradingID);
+							Trading trading = new Trading(tradingID, -1, "", "", "已发货", "");
+							
+							new UserImpl().ensureDeliver(trading);
+							
+							tableModel.removeRow(selectedRowIndex);
+						}
+					}
+					});
+			}
+			
+		});
+		queryDeliver.setBounds(10, 290, 80, 30);
+		
 		leftPane.add(querySelfBooks);
 		leftPane.add(issueBook);
 		leftPane.add(queryOtherBooks);
@@ -375,6 +448,7 @@ public class UserFrame extends JFrame{
 		leftPane.add(querySelfNeed);
 		leftPane.add(issueNeed);
 		leftPane.add(querySelftrading);
+		leftPane.add(queryDeliver);
 	}
 	private void rightPaneBuilder(){//构建右边panel的属性
 		rightPane = new JPanel();
