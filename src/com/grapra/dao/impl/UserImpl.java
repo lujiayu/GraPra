@@ -1,10 +1,10 @@
 package com.grapra.dao.impl;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.grapra.bean.Book;
@@ -13,7 +13,6 @@ import com.grapra.bean.Return;
 import com.grapra.bean.Trading;
 import com.grapra.bean.User;
 import com.grapra.db.DBConnection;
-import com.mysql.jdbc.PreparedStatement;
 
 public class UserImpl implements com.grapra.dao.User{
 
@@ -49,7 +48,7 @@ public class UserImpl implements com.grapra.dao.User{
 	public boolean addBook(Book book) {
 		// TODO Auto-generated method stub
 		boolean b=false;
-		String insertSql="insert into book(bookName,OwnerName,bookStatu) value(?,?,?)";
+		String insertSql="insert into book (bookName,OwnerName,bookStatu) values(?,?,?)";
 		try{
 			PreparedStatement pst=(PreparedStatement) conn.prepareStatement(insertSql);
 			pst.setString(1, book.getBookName());
@@ -87,7 +86,7 @@ public class UserImpl implements com.grapra.dao.User{
 	@Override
 	public boolean buyBook(Book book, User user) {
 		// TODO Auto-generated method stub
-		boolean b=false;
+		int b=0;
 		String insertSql="insert into trading (bookID,ownerID,buyerID,deliver,receive) values(?,?,?,?,?)";
 		String updateSql = "update book set  bookStatu = ? where bookID ='"+book.getBookID()+"'";	
 		try{
@@ -98,9 +97,9 @@ public class UserImpl implements com.grapra.dao.User{
 			//pst.setDate(4,(java.sql.Date)new Date());
 			pst.setString(4,"未发货");
 			pst.setString(5,"未收货");
-			b=pst.execute();
+			b=pst.executeUpdate();
 			
-			PreparedStatement pst = conn.prepareStatement(updateSql);
+			pst = conn.prepareStatement(updateSql);
 			pst.setString(1, "已售出");
 			b=pst.executeUpdate();	
 		}
@@ -108,7 +107,7 @@ public class UserImpl implements com.grapra.dao.User{
 		{
 			e.printStackTrace();
 		}
-		return b;
+		return b<=0?true:false;
 	}
 	/*
 	 * 增删改查 need 表
@@ -249,12 +248,8 @@ public class UserImpl implements com.grapra.dao.User{
 				{
 					if(re_1.getInt("tradingID")==re.getInt("tradingID"))
 					{
-<<<<<<< HEAD
-				//		list.add(new Return(re.getInt("returnID"),re.getInt("tradingID"),re.getString("statu")));
-=======
-						Trading trad= new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getString("deliver"),re.getString("receive")));
+						Trading trad= new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getString("deliver"),re.getString("receive"));
 						list.add(new Return(re_1.getInt("returnID"),trad,re_1.getString("statu")));
->>>>>>> origin/master
 					}
 				}
 			}
@@ -269,7 +264,7 @@ public class UserImpl implements com.grapra.dao.User{
 	@Override
 	public boolean dealReturn(Return returns) {
 		// TODO Auto-generated method stub
-		boolean b=false;
+		int b=0;
 		String updateSql = "update Return set  statu = ? where returnID ='"+returns.getReturnID()+"'";
 		try
 		{
@@ -281,7 +276,7 @@ public class UserImpl implements com.grapra.dao.User{
 		{
 			e.printStackTrace();
 		}
-		return b;
+		return b<=0?true:false;
 	}
 
 	@Override
@@ -309,7 +304,7 @@ public class UserImpl implements com.grapra.dao.User{
 	@Override
 	public boolean ensureDeliver(Trading trading) {
 		// TODO Auto-generated method stub
-		boolean b=false;
+		int b=0;
 		String updateSql = "update trading set  deliver = ?  where tradingID ='"+trading.getTradingID()+"'";
 		try
 		{
@@ -321,7 +316,7 @@ public class UserImpl implements com.grapra.dao.User{
 		{
 			e.printStackTrace();
 		}
-		return b;
+		return b<=0?true:false;
 	}
 
 	@Override
@@ -348,7 +343,7 @@ public class UserImpl implements com.grapra.dao.User{
 
 	@Override
 	public boolean ensureReceive(Trading trading) {
-		boolean b=false;
+		int b=0;
 		String updateSql = "update trading set  receive = ?  where tradingID ='"+trading.getTradingID()+"'";
 		try
 		{
@@ -360,7 +355,7 @@ public class UserImpl implements com.grapra.dao.User{
 		{
 			e.printStackTrace();
 		}
-		return b;
+		return b<=0?true:false;
 	}
 
 }
