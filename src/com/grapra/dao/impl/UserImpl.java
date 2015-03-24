@@ -68,7 +68,7 @@ public class UserImpl implements com.grapra.dao.User{
 	public List<Book> queryAllBooks() {
 		// TODO Auto-generated method stub
 		List<Book> list = new ArrayList<Book>();
-		String selectSql="select * from book "; 
+		String selectSql="select * from book where bookStatu= '未出售'"; 
 		try{
 		Statement stmt = conn.createStatement();
 		ResultSet re= stmt.executeQuery(selectSql);
@@ -88,16 +88,21 @@ public class UserImpl implements com.grapra.dao.User{
 	public boolean buyBook(Book book, User user) {
 		// TODO Auto-generated method stub
 		boolean b=false;
-		String insertSql="insert into trading (bookID,ownerID,buyerID,time,deliver,receive) values(?,?,?,?,?,?)";
+		String insertSql="insert into trading (bookID,ownerID,buyerID,deliver,receive) values(?,?,?,?,?)";
+		String updateSql = "update book set  bookStatu = ? where bookID ='"+book.getBookID()+"'";	
 		try{
 			PreparedStatement pst=(PreparedStatement) conn.prepareStatement(insertSql);
 			pst.setInt(1,book.getBookID());
 			pst.setString(2,book.getOwnerName());
 			pst.setString(3,user.getName());
-			pst.setDate(4,(java.sql.Date)new Date());
-			pst.setString(5,"未发货");
-			pst.setString(6,"未收货");
-			b=pst.execute(insertSql);
+			//pst.setDate(4,(java.sql.Date)new Date());
+			pst.setString(4,"未发货");
+			pst.setString(5,"未收货");
+			b=pst.execute();
+			
+			PreparedStatement pst = conn.prepareStatement(updateSql);
+			pst.setString(1, "已售出");
+			b=pst.executeUpdate();	
 		}
 		catch(Exception e)
 		{
@@ -154,7 +159,7 @@ public class UserImpl implements com.grapra.dao.User{
 			PreparedStatement pst=(PreparedStatement) conn.prepareStatement(insertSql);
 			pst.setString(1, need.getBookName());
 			pst.setString(2, need.getNeederName());
-			b=pst.execute(insertSql);
+			b=pst.execute();
 		}
 		catch(Exception e)
 		{
@@ -174,7 +179,7 @@ public class UserImpl implements com.grapra.dao.User{
 		String insertSql="delete from need where needID = '"+need.getNeedID()+"'";
 		try{
 			PreparedStatement pst=(PreparedStatement) conn.prepareStatement(insertSql);
-			b=pst.execute(insertSql);
+			b=pst.execute();
 		}
 		catch(Exception e)
 		{
@@ -198,7 +203,7 @@ public class UserImpl implements com.grapra.dao.User{
 			{
 				//public Trading(int tradingID, int bookID, String ownerID, String buyerID,
 						//Date time, String deliver, String receive) {
-				list.add(new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getDate("time"),re.getString("deliver"),re.getString("receive")));
+				list.add(new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getString("deliver"),re.getString("receive")));
 			}
 		}
 		catch(Exception e)
@@ -219,7 +224,7 @@ public class UserImpl implements com.grapra.dao.User{
 			PreparedStatement pst=(PreparedStatement) conn.prepareStatement(insertSql);
 			pst.setInt(1, trading.getTradingID());
 			pst.setString(2,"待处理");
-			b=pst.execute(insertSql);
+			b=pst.execute();
 		}
 		catch(Exception e)
 		{
@@ -232,19 +237,24 @@ public class UserImpl implements com.grapra.dao.User{
 	@Override
 	public List<Return> queryReturn(User user) {
 		List<Return> list=new ArrayList<Return>();
-		String selectSql="select * from Return";
-		String selectSql_1="select * from trading where buyerID = '"+user.getName()+"'";
+		String selectSql_1="select * from Return";
+		String selectSql="select * from trading where buyerID = '"+user.getName()+"'";
 		try{
 			Statement stmt=conn.createStatement();
-			ResultSet re= stmt.executeQuery(selectSql);
-			ResultSet re_1=stmt.executeQuery(selectSql_1);
-			while(re.next())
+			ResultSet re_1= stmt.executeQuery(selectSql_1);
+			ResultSet re=stmt.executeQuery(selectSql);
+			while(re_1.next())
 			{
-				while(re_1.next())
+				while(re.next())
 				{
-					if(re.getInt("tradingID")==re_1.getInt("tradingID"))
+					if(re_1.getInt("tradingID")==re.getInt("tradingID"))
 					{
+<<<<<<< HEAD
 				//		list.add(new Return(re.getInt("returnID"),re.getInt("tradingID"),re.getString("statu")));
+=======
+						Trading trad= new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getString("deliver"),re.getString("receive")));
+						list.add(new Return(re_1.getInt("returnID"),trad,re_1.getString("statu")));
+>>>>>>> origin/master
 					}
 				}
 			}
@@ -259,31 +269,98 @@ public class UserImpl implements com.grapra.dao.User{
 	@Override
 	public boolean dealReturn(Return returns) {
 		// TODO Auto-generated method stub
-		return false;
+		boolean b=false;
+		String updateSql = "update Return set  statu = ? where returnID ='"+returns.getReturnID()+"'";
+		try
+		{
+			PreparedStatement pst = conn.prepareStatement(updateSql);
+			pst.setString(1, returns.getStatu());
+			b=pst.executeUpdate();
+		}	
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return b;
 	}
 
 	@Override
 	public List<Trading> queryDeliverTrading(User user) {
 		// TODO Auto-generated method stub
-		return null;
+		List<Trading> list =new ArrayList<Trading>();
+		String selectSql="select * from trading where  deliver= '已发货' and receive = '已收货' and ownerID= '"+ user.getName()+"'" ;
+		try{
+			Statement stmt=conn.createStatement();
+			ResultSet re= stmt.executeQuery(selectSql);
+			while(re.next())
+			{
+				//public Trading(int tradingID, int bookID, String ownerID, String buyerID,
+						//Date time, String deliver, String receive) {
+				list.add(new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getString("deliver"),re.getString("receive")));
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	@Override
 	public boolean ensureDeliver(Trading trading) {
 		// TODO Auto-generated method stub
-		return false;
+		boolean b=false;
+		String updateSql = "update trading set  deliver = ?  where tradingID ='"+trading.getTradingID()+"'";
+		try
+		{
+			PreparedStatement pst = conn.prepareStatement(updateSql);
+			pst.setString(1, trading.getDeliver());
+			b=pst.executeUpdate();
+		}	
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return b;
 	}
 
 	@Override
 	public List<Trading> queryReceiveTrading(User user) {
 		// TODO Auto-generated method stub
-		return null;
+		List<Trading> list =new ArrayList<Trading>();
+		String selectSql=" select * from trading where receive='未收货' and buyerID = '"+user.getName()+"'";
+		try{
+			Statement stmt=conn.createStatement();
+			ResultSet re= stmt.executeQuery(selectSql);
+			while(re.next())
+			{
+				//public Trading(int tradingID, int bookID, String ownerID, String buyerID,
+						//Date time, String deliver, String receive) {
+				list.add(new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getString("deliver"),re.getString("receive")));
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	@Override
 	public boolean ensureReceive(Trading trading) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean b=false;
+		String updateSql = "update trading set  receive = ?  where tradingID ='"+trading.getTradingID()+"'";
+		try
+		{
+			PreparedStatement pst = conn.prepareStatement(updateSql);
+			pst.setString(1, trading.getReceive());
+			b=pst.executeUpdate();
+		}	
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return b;
 	}
 
 }
