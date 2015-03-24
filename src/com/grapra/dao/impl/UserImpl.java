@@ -1,6 +1,10 @@
 package com.grapra.dao.impl;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.grapra.bean.Book;
@@ -10,11 +14,6 @@ import com.grapra.bean.Trading;
 import com.grapra.bean.User;
 import com.grapra.db.DBConnection;
 import com.mysql.jdbc.PreparedStatement;
-
-import java.sql.Connection;
-import java.util.Date;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 public class UserImpl implements com.grapra.dao.User{
 
@@ -50,13 +49,13 @@ public class UserImpl implements com.grapra.dao.User{
 	public boolean addBook(Book book) {
 		// TODO Auto-generated method stub
 		boolean b=false;
-		String insertSql="insert into book (bookName,OwnerName,bookStatu) values(?,?,?)";
+		String insertSql="insert into book(bookName,OwnerName,bookStatu) value(?,?,?)";
 		try{
 			PreparedStatement pst=(PreparedStatement) conn.prepareStatement(insertSql);
 			pst.setString(1, book.getBookName());
 			pst.setString(2,book.getOwnerName());
 			pst.setString(3,book.getBookStatu());
-			b=pst.execute(insertSql);
+			b=pst.execute();
 		}
 		catch(Exception e)
 		{
@@ -245,7 +244,7 @@ public class UserImpl implements com.grapra.dao.User{
 				{
 					if(re.getInt("tradingID")==re_1.getInt("tradingID"))
 					{
-						list.add(new Return(re.getInt("returnID"),re.getInt("tradingID"),re.getString("statu")));
+				//		list.add(new Return(re.getInt("returnID"),re.getInt("tradingID"),re.getString("statu")));
 					}
 				}
 			}

@@ -1,6 +1,5 @@
 package com.grapra.bean;
 
-import java.sql.Date;
 
 /**
  * 
@@ -14,20 +13,20 @@ public class Trading {
 	private int bookID;//被交易的书籍ID
 	private String ownerID;//拥有者ID
 	private String buyerID;//购买者ID
-	private Date time;//交易时间
+
 	private String deliver;//发货信息
 	private String receive;//收货信息
 	
 
 	
 	public Trading(int tradingID, int bookID, String ownerID, String buyerID,
-			Date time, String deliver, String receive) {
+		 String deliver, String receive) {
 		super();
 		this.tradingID = tradingID;
 		this.bookID = bookID;
 		this.ownerID = ownerID;
 		this.buyerID = buyerID;
-		this.time = time;
+
 		this.deliver = deliver;
 		this.receive = receive;
 	}
@@ -56,12 +55,6 @@ public class Trading {
 	}
 	public void setBuyerID(String buyerID) {
 		this.buyerID = buyerID;
-	}
-	public Date getTime() {
-		return time;
-	}
-	public void setTime(Date time) {
-		this.time = time;
 	}
 
 
