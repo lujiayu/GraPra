@@ -7,10 +7,10 @@ public interface Util {
 	 * @param user
 	 * @return
 	 */
-	public boolean register(User user);
+	public boolean register(com.grapra.bean.User user);
 	
 	/**
 	 * µÇÂ½
 	 */
-	public User login(String userName,String password);
+	public com.grapra.bean.User login(String userName,String password);
 }
