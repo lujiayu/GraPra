@@ -89,16 +89,21 @@ public class UserImpl implements com.grapra.dao.User{
 	public boolean buyBook(Book book, User user) {
 		// TODO Auto-generated method stub
 		boolean b=false;
-		String insertSql="insert into trading (bookID,ownerID,buyerID,time,deliver,receive) values(?,?,?,?,?,?)";
+		String insertSql="insert into trading (bookID,ownerID,buyerID,deliver,receive) values(?,?,?,?,?)";
+		String updateSql = "update book set  bookStatu = ? where bookID ='"+book.getBookID()+"'";	
 		try{
 			PreparedStatement pst=(PreparedStatement) conn.prepareStatement(insertSql);
 			pst.setInt(1,book.getBookID());
 			pst.setString(2,book.getOwnerName());
 			pst.setString(3,user.getName());
-			pst.setDate(4,(java.sql.Date)new Date());
-			pst.setString(5,"未发货");
-			pst.setString(6,"未收货");
+			//pst.setDate(4,(java.sql.Date)new Date());
+			pst.setString(4,"未发货");
+			pst.setString(5,"未收货");
 			b=pst.execute();
+			
+			PreparedStatement pst = conn.prepareStatement(updateSql);
+			pst.setString(1, "已售出");
+			b=pst.executeUpdate();	
 		}
 		catch(Exception e)
 		{
@@ -199,7 +204,7 @@ public class UserImpl implements com.grapra.dao.User{
 			{
 				//public Trading(int tradingID, int bookID, String ownerID, String buyerID,
 						//Date time, String deliver, String receive) {
-				list.add(new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getDate("time"),re.getString("deliver"),re.getString("receive")));
+				list.add(new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getString("deliver"),re.getString("receive")));
 			}
 		}
 		catch(Exception e)
@@ -245,7 +250,7 @@ public class UserImpl implements com.grapra.dao.User{
 				{
 					if(re_1.getInt("tradingID")==re.getInt("tradingID"))
 					{
-						Trading trad= new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getDate("time"),re.getString("deliver"),re.getString("receive")));
+						Trading trad= new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getString("deliver"),re.getString("receive")));
 						list.add(new Return(re_1.getInt("returnID"),trad,re_1.getString("statu")));
 					}
 				}
@@ -288,7 +293,7 @@ public class UserImpl implements com.grapra.dao.User{
 			{
 				//public Trading(int tradingID, int bookID, String ownerID, String buyerID,
 						//Date time, String deliver, String receive) {
-				list.add(new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getDate("time"),re.getString("deliver"),re.getString("receive")));
+				list.add(new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getString("deliver"),re.getString("receive")));
 			}
 		}
 		catch(Exception e)
@@ -328,7 +333,7 @@ public class UserImpl implements com.grapra.dao.User{
 			{
 				//public Trading(int tradingID, int bookID, String ownerID, String buyerID,
 						//Date time, String deliver, String receive) {
-				list.add(new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getDate("time"),re.getString("deliver"),re.getString("receive")));
+				list.add(new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getString("deliver"),re.getString("receive")));
 			}
 		}
 		catch(Exception e)
