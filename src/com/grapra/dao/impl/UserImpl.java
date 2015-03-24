@@ -50,7 +50,7 @@ public class UserImpl implements com.grapra.dao.User{
 	public boolean addBook(Book book) {
 		// TODO Auto-generated method stub
 		boolean b=false;
-		String insertSql="insert into book (bookName.OwnerName,bookStatu) values(?,?,?)";
+		String insertSql="insert into book (bookName,OwnerName,bookStatu) values(?,?,?)";
 		try{
 			PreparedStatement pst=(PreparedStatement) conn.prepareStatement(insertSql);
 			pst.setString(1, book.getBookName());
@@ -150,7 +150,7 @@ public class UserImpl implements com.grapra.dao.User{
 	public boolean issueNeed(Need need) {
 		// TODO Auto-generated method stub
 		boolean b=false;
-		String insertSql="insert into need (bookName.neederName) values(?,?)";
+		String insertSql="insert into need (bookName,neederName) values(?,?)";
 		try{
 			PreparedStatement pst=(PreparedStatement) conn.prepareStatement(insertSql);
 			pst.setString(1, need.getBookName());
@@ -214,7 +214,19 @@ public class UserImpl implements com.grapra.dao.User{
 		//在 return表里添加
 		//然后 积分表里－1
 		// TODO Auto-generated method stub
-		
+		boolean b=false;
+		String insertSql="insert into return (tradingID,statu) values(?,?)";
+		try{
+			PreparedStatement pst=(PreparedStatement) conn.prepareStatement(insertSql);
+			pst.setString(1, trading.getTradingID());
+			pst.setString(2,"");
+			b=pst.execute(insertSql);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return b;
 		return false;
 	}
 
