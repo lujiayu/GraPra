@@ -133,7 +133,7 @@ public class UserImpl implements com.grapra.dao.User{
 	public List<Need> queryNeed(User user) {
 		// TODO Auto-generated method stub
 		List<Need> list =new ArrayList<Need>();
-		String selectSql="select * from Need where neederName =' "+ user.getName() +"'";
+		String selectSql="select * from Need where neederName ='"+ user.getName() +"'";
 		try{
 			Statement stmt=conn.createStatement();
 			ResultSet re= stmt.executeQuery(selectSql);
@@ -194,7 +194,9 @@ public class UserImpl implements com.grapra.dao.User{
 		// TODO Auto-generated method stub
 
 		List<Trading> list =new ArrayList<Trading>();
-		String selectSql="select * from trading where  deliver= '已发货' and receive = '已收货' and ownerID= '"+ user.getName()+"'" ;
+		
+		String selectSql="select * from trading where  deliver='已发货' and receive = '已收货' and (ownerID= '"+ user.getName()+"'"
+				+ " or buyerID='"+user.getName()+"')" ;
 		try{
 			Statement stmt=conn.createStatement();
 			ResultSet re= stmt.executeQuery(selectSql);
@@ -203,6 +205,7 @@ public class UserImpl implements com.grapra.dao.User{
 				//public Trading(int tradingID, int bookID, String ownerID, String buyerID,
 						//Date time, String deliver, String receive) {
 				list.add(new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getString("deliver"),re.getString("receive")));
+			System.out.println(list.get(0).getTradingID());
 			}
 		}
 		catch(Exception e)
