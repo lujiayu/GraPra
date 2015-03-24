@@ -233,19 +233,20 @@ public class UserImpl implements com.grapra.dao.User{
 	@Override
 	public List<Return> queryReturn(User user) {
 		List<Return> list=new ArrayList<Return>();
-		String selectSql="select * from Return";
-		String selectSql_1="select * from trading where buyerID = '"+user.getName()+"'";
+		String selectSql_1="select * from Return";
+		String selectSql="select * from trading where buyerID = '"+user.getName()+"'";
 		try{
 			Statement stmt=conn.createStatement();
-			ResultSet re= stmt.executeQuery(selectSql);
-			ResultSet re_1=stmt.executeQuery(selectSql_1);
-			while(re.next())
+			ResultSet re_1= stmt.executeQuery(selectSql_1);
+			ResultSet re=stmt.executeQuery(selectSql);
+			while(re_1.next())
 			{
-				while(re_1.next())
+				while(re.next())
 				{
-					if(re.getInt("tradingID")==re_1.getInt("tradingID"))
+					if(re_1.getInt("tradingID")==re.getInt("tradingID"))
 					{
-						list.add(new Return(re.getInt("returnID"),re.getInt("tradingID"),re.getString("statu")));
+						Trading trad= new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getDate("time"),re.getString("deliver"),re.getString("receive")));
+						list.add(new Return(re_1.getInt("returnID"),trad,re_1.getString("statu")));
 					}
 				}
 			}
@@ -260,13 +261,41 @@ public class UserImpl implements com.grapra.dao.User{
 	@Override
 	public boolean dealReturn(Return returns) {
 		// TODO Auto-generated method stub
-		return false;
+		boolean b=false;
+		String updateSql = "update Return set  statu = ?";
+		try
+		{
+			PreparedStatement pst = conn.prepareStatement(updateSql);
+			pst.setString(1, returns.getStatu());
+			b=pst.executeUpdate();
+		}	
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return b;
 	}
 
 	@Override
 	public List<Trading> queryDeliverTrading(User user) {
 		// TODO Auto-generated method stub
-		return null;
+		List<Trading> list =new ArrayList<Trading>();
+		String selectSql="select * from trading where  deliver= '已发货' and receive = '已收货' and ownerID= '"+ user.getName()+"'" ;
+		try{
+			Statement stmt=conn.createStatement();
+			ResultSet re= stmt.executeQuery(selectSql);
+			while(re.next())
+			{
+				//public Trading(int tradingID, int bookID, String ownerID, String buyerID,
+						//Date time, String deliver, String receive) {
+				list.add(new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getDate("time"),re.getString("deliver"),re.getString("receive")));
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	@Override
