@@ -129,7 +129,7 @@ public class UserImpl implements com.grapra.dao.User{
 	@Override
 	public List<Need> queryNeed(User user) {
 		// TODO Auto-generated method stub
-		List<Need> list =new ArraryList<Need>();
+		List<Need> list =new ArrayList<Need>();
 		String selectSql="select * from Need where neederName =' "+ user.getName() +"'";
 		try{
 			Statement stmt=conn.createStatement();
@@ -190,7 +190,7 @@ public class UserImpl implements com.grapra.dao.User{
 	public List<Trading> queryTrading(User user) {
 		// TODO Auto-generated method stub
 
-		List<Trading> list =new ArraryList<Trading>();
+		List<Trading> list =new ArrayList<Trading>();
 		String selectSql="select * from trading where  deliver= '已发货' and receive = '已收货' and ownerID= '"+ user.getName()+"'" ;
 		try{
 			Statement stmt=conn.createStatement();
@@ -218,8 +218,8 @@ public class UserImpl implements com.grapra.dao.User{
 		String insertSql="insert into return (tradingID,statu) values(?,?)";
 		try{
 			PreparedStatement pst=(PreparedStatement) conn.prepareStatement(insertSql);
-			pst.setString(1, trading.getTradingID());
-			pst.setString(2,"");
+			pst.setInt(1, trading.getTradingID());
+			pst.setString(2,"待处理");
 			b=pst.execute(insertSql);
 		}
 		catch(Exception e)
@@ -227,13 +227,34 @@ public class UserImpl implements com.grapra.dao.User{
 			e.printStackTrace();
 		}
 		return b;
-		return false;
+		//return false;
 	}
 
 	@Override
 	public List<Return> queryReturn(User user) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Return> list=new ArrayList<Return>();
+		String selectSql="select * from Return";
+		String selectSql_1="select * from trading where buyerID = '"+user.getName()+"'";
+		try{
+			Statement stmt=conn.createStatement();
+			ResultSet re= stmt.executeQuery(selectSql);
+			ResultSet re_1=stmt.executeQuery(selectSql_1);
+			while(re.next())
+			{
+				while(re_1.next())
+				{
+					if(re.getInt("tradingID")==re_1.getInt("tradingID"))
+					{
+						list.add(new Return(re.getInt("returnID"),re.getInt("tradingID"),re.getString("statu")));
+					}
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	@Override
