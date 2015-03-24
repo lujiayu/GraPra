@@ -20,11 +20,14 @@ public class UserImpl implements com.grapra.dao.User{
 
 	Connection conn;
 	
-	UserImpl(){
+	public UserImpl(){
 	conn = (Connection) new DBConnection().getConnection();
 
 	}
-
+/*
+ * 增删改查 book 表
+ * 
+ */
 	@Override
 	public List<Book> querySelfBooks(String userName) {
 		// TODO Auto-generated method stub
@@ -32,7 +35,7 @@ public class UserImpl implements com.grapra.dao.User{
 		String selectSql="select * from book where OwnerName ='"+userName+"'"; 
 		try{
 		Statement stmt = conn.createStatement();
-		ResultSet re= stmt.getResultSet();
+		ResultSet re= stmt.executeQuery(selectSql);
 		while(re.next())
 		{
 			list.add(new Book(re.getInt("bookID"),re.getString("bookName"),re.getString("OwnerName"),re.getString("bookStatu")));
@@ -69,7 +72,7 @@ public class UserImpl implements com.grapra.dao.User{
 		String selectSql="select * from book "; 
 		try{
 		Statement stmt = conn.createStatement();
-		ResultSet re= stmt.getResultSet();
+		ResultSet re= stmt.executeQuery(selectSql);
 		while(re.next())
 		{
 			list.add(new Book(re.getInt("bookID"),re.getString("bookName"),re.getString("OwnerName"),re.getString("bookStatu")));
@@ -79,12 +82,14 @@ public class UserImpl implements com.grapra.dao.User{
 		}
 		return list;
 	}
-
+/*
+ * 增删改查 trading 表
+ */
 	@Override
 	public boolean buyBook(Book book, User user) {
 		// TODO Auto-generated method stub
 		boolean b=false;
-		String insertSql="insert into trading (bookID.ownerID,buyerID,time,deliver,receive) values(?,?,?,?,?,?)";
+		String insertSql="insert into trading (bookID,ownerID,buyerID,time,deliver,receive) values(?,?,?,?,?,?)";
 		try{
 			PreparedStatement pst=(PreparedStatement) conn.prepareStatement(insertSql);
 			pst.setInt(1,book.getBookID());
@@ -101,40 +106,115 @@ public class UserImpl implements com.grapra.dao.User{
 		}
 		return b;
 	}
-// 写到这了
+	/*
+	 * 增删改查 need 表
+	 */
 	@Override
 	public List<Need> queryAll() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Need> list = new ArrayList<Need>();
+		String selectSql="select * from Need "; 
+		try{
+		Statement stmt = conn.createStatement();
+		ResultSet re= stmt.executeQuery(selectSql);
+		while(re.next())
+		{
+			list.add(new Need(re.getInt("needID"),re.getString("bookName"),re.getString("neederName")));
+		}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	@Override
 	public List<Need> queryNeed(User user) {
 		// TODO Auto-generated method stub
-		return null;
+		List<Need> list =new ArraryList<Need>();
+		String selectSql="select * from Need where neederName =' "+ user.getName() +"'";
+		try{
+			Statement stmt=conn.createStatement();
+			ResultSet re= stmt.executeQuery(selectSql);
+			while(re.next())
+			{
+				list.add(new Need(re.getInt("needID"),re.getString("bookName"),re.getString("neederName")));
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	@Override
 	public boolean issueNeed(Need need) {
 		// TODO Auto-generated method stub
-		return false;
+		boolean b=false;
+		String insertSql="insert into need (bookName.neederName) values(?,?)";
+		try{
+			PreparedStatement pst=(PreparedStatement) conn.prepareStatement(insertSql);
+			pst.setString(1, need.getBookName());
+			pst.setString(2, need.getNeederName());
+			b=pst.execute(insertSql);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return b;
 	}
 
 	@Override
 	public boolean deleteNeed(Need need) {
+//		String delSql = "delete from studentInfo where StuID = ?";
+//        pst = conn.prepareStatement(delSql);
+//        pst.setString(1, "20120001");
+		
 		// TODO Auto-generated method stub
-		return false;
+		boolean b=false;
+		String insertSql="delete from need where needID = '"+need.getNeedID()+"'";
+		try{
+			PreparedStatement pst=(PreparedStatement) conn.prepareStatement(insertSql);
+			b=pst.execute(insertSql);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return b;
 	}
-
+/*
+ * 增删改查 trading 表
+ */
 	@Override
 	public List<Trading> queryTrading(User user) {
 		// TODO Auto-generated method stub
-		return null;
-	}
 
+		List<Trading> list =new ArraryList<Trading>();
+		String selectSql="select * from trading where  deliver= '已发货' and receive = '已收货' and ownerID= '"+ user.getName()+"'" ;
+		try{
+			Statement stmt=conn.createStatement();
+			ResultSet re= stmt.executeQuery(selectSql);
+			while(re.next())
+			{
+				//public Trading(int tradingID, int bookID, String ownerID, String buyerID,
+						//Date time, String deliver, String receive) {
+				list.add(new Trading(re.getInt("tradingID"),re.getInt("bookID"),re.getString("ownerID"),re.getString("buyerID"),re.getDate("time"),re.getString("deliver"),re.getString("receive")));
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return list;
+	}
+//申请退货
 	@Override
 	public boolean ReturnBook(Trading trading) {
+		//在 return表里添加
+		//然后 积分表里－1
 		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
