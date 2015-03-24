@@ -21,7 +21,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	protected JTextField username;
 	protected JPasswordField password;
 	private JTextField ip;
-
+	
 	MainFrame() throws IOException {
 		this.setBounds(550, 200, 300, 300);
 		this.setTitle("欢迎使用旧书回收系统");
