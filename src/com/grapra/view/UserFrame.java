@@ -19,6 +19,7 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 import com.grapra.bean.Book;
+import com.grapra.bean.Need;
 import com.grapra.bean.User;
 import com.grapra.dao.impl.UserImpl;
 
@@ -30,7 +31,9 @@ public class UserFrame extends JFrame{
 	private JButton querySelfBooks;//查询自己发布过的图书
 	private JButton issueBook;//发布书籍
 	private JButton queryOtherBooks;//查询其他人发布的图书
-	
+	private JButton queryNeed;//查询需求信息
+	private JButton querySelfNeed;//查询自己的需求信息
+	private JButton issueNeed;//发布需求信息
 	
 	private JPanel rightPane;//右边存放内容的面板
 	private JTable table;//右边面板中要使用的表格
@@ -40,7 +43,8 @@ public class UserFrame extends JFrame{
 		leftPane = new JPanel();
 		querySelfBooks = new JButton("我发布的书");
 		issueBook = new JButton("发布书籍");
-		queryOtherBooks = new JButton("购买书籍");
+		queryOtherBooks = new JButton("书籍列表");
+		queryNeed = new JButton("需求列表");
 		
 	}
 	
@@ -82,6 +86,7 @@ public class UserFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 
+				rightPane.removeAll();
 				String[] headers = { "书籍ID", "书籍名", "书籍拥有人" ,"书籍状态"};
 
 				DefaultTableModel model = new DefaultTableModel(null, headers){
@@ -126,11 +131,13 @@ public class UserFrame extends JFrame{
 		});
 		issueBook.setBounds(10,50,80,30);//设置按钮位置、大小
 		
+		//查询所有书籍信息、单击购买
 		queryOtherBooks.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				rightPane.removeAll();
 				String[] headers = { "书籍ID", "书籍名", "书籍拥有人" ,"书籍状态"};
 
 				DefaultTableModel model = new DefaultTableModel(null, headers){
@@ -186,6 +193,8 @@ public class UserFrame extends JFrame{
 							new UserImpl().buyBook(book, user);
 							
 							System.out.println(bookID+" -- 购买人："+user.getName());
+							
+							tableModel.removeRow(selectedRowIndex);
 						}
 					}
 					});
@@ -194,10 +203,48 @@ public class UserFrame extends JFrame{
 		});
 		queryOtherBooks.setBounds(10,90,80,30);
 
+		queryNeed.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				rightPane.removeAll();
+				String[] headers = { "需求ID", "需求书籍名", "需求人姓名" };
+
+				DefaultTableModel model = new DefaultTableModel(null, headers){
+
+					public boolean isCellEditable(int row, int column) {
+						return false;
+					}
+				};
+					table = new JTable(model);
+					
+
+					List<Need> needList = new UserImpl().queryAll();
+					
+					for(Need need:needList){	
+						model.addRow(new Object[]{need.getNeedID(), need.getBookName(),
+								need.getNeederName()});
+					}
+
+				
+				table.setBackground(Color.gray);
+				table.setBounds(0, 0, 550, 500);
+
+				JScrollPane jsp = new JScrollPane(table);
+				jsp.setBounds(0,0,550,500);
+				
+				rightPane.add(jsp);
+				rightPane.validate();
+			}
+			
+		});
+		queryNeed.setBounds(10, 130, 80, 30);
 		
 		leftPane.add(querySelfBooks);
 		leftPane.add(issueBook);
 		leftPane.add(queryOtherBooks);
+		leftPane.add(queryNeed);
 	}
 	private void rightPaneBuilder(){//构建右边panel的属性
 		rightPane = new JPanel();
