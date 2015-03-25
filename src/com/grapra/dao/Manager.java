@@ -26,24 +26,24 @@ public interface Manager {
 	 * 获取用户列表
 	 * @return
 	 */
-	public List<User> queryUser();
+	public List<com.grapra.bean.User> queryUser();
 	
 	/**
 	 * 更改用户积分
 	 * @param user
 	 * @return
 	 */
-	public boolean updateUserScore(User user);
+	public boolean updateUserScore(com.grapra.bean.User user);
 	
 	/**
 	 * 更改用户状态
 	 */
-	public boolean updateUserStatu(User user);
+	public boolean updateUserStatu(com.grapra.bean.User user);
 	
 	/**
 	 * 删除用户
 	 * @param user
 	 * @return
 	 */
-	public boolean deleteUser(User user);
+	public boolean deleteUser(com.grapra.bean.User user);
 }
