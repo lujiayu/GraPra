@@ -326,7 +326,7 @@ public class UserImpl implements com.grapra.dao.User{
 	public List<Trading> queryReceiveTrading(User user) {
 		// TODO Auto-generated method stub
 		List<Trading> list =new ArrayList<Trading>();
-		String selectSql=" select * from trading where receive='未收货' and buyerID = '"+user.getName()+"'";
+		String selectSql=" select * from trading where deliver='已发货' and receive='未收货' and buyerID = '"+user.getName()+"'";
 		try{
 			Statement stmt=conn.createStatement();
 			ResultSet re= stmt.executeQuery(selectSql);

@@ -11,10 +11,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+
+import com.grapra.bean.User;
+import com.grapra.dao.impl.UtilImpl;
 
 public class MainFrame extends JFrame implements ActionListener {
 
@@ -102,7 +106,29 @@ public class MainFrame extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {//µÇÂ½Action
+		String name = username.getText();
+		String pass = password.getText();
 		
+		User user = new UtilImpl().login(name, pass);
+		
+		int type = user.getType();
+		this.dispose();//Òþ²ØµÇÂ½¿ò
+
+		if(type==0){
+			new ManagerFrame(user);
+		}else{
+			if(type==1){
+				new UserFrame(user);
+
+			}else{
+				if(type==2){
+					JOptionPane.showMessageDialog(null, "ÇëµÈ´ý¹ÜÀíÔ±ÉóºËÕËºÅ£¡");
+				}else{
+					JOptionPane.showMessageDialog(null, "ÕËºÅ»òÃÜÂë´íÎó£¡");
+				}
+			}
+		}
+
 	}
 
 	public static void main(String args[]) {

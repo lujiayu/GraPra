@@ -12,7 +12,7 @@ public class User {
 	private int type;//用户类型，0为管理员，1为普通用户,2为待管理员批准获取权限的用户
 	
 	//构造函数
-	public User(String name, String password, int score, int type) {
+	public User(String name, String password, int type,int score) {
 		
 		this.name = name;
 		this.password = password;
