@@ -7,6 +7,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import com.grapra.dao.Util;
 import com.grapra.db.DBConnection;
 
@@ -19,7 +21,7 @@ public class UtilImpl implements Util{
 	}
 	@Override
 	public boolean register(com.grapra.bean.User user) {
-		boolean b=false;
+		boolean b=true;
 		String insertSql="insert into usertable (name,password,type,score) values(?,?,?,?)";
 		try{
 			PreparedStatement pst=(PreparedStatement) conn.prepareStatement(insertSql);
@@ -28,11 +30,16 @@ public class UtilImpl implements Util{
 			pst.setInt(3,user.getType());
 			pst.setInt(4,user.getScore());
 			b=pst.execute();
+			b=true;
 		}
 		catch(Exception e)
 		{
+			b = false;
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "该账号已存在！");
 		}
+		System.out.println(b);
+		if(b)JOptionPane.showMessageDialog(null, "提交成功，请等待管理员审核！");
 		return b;
 	}
 	@Override

@@ -85,6 +85,13 @@ public class MainFrame extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {// ×¢²áAction
 				// TODO Auto-generated method stub
+				User user = new User();
+				user.setName(username.getText());
+				user.setPassword(password.getText());
+				user.setType(2);
+				user.setScore(0);
+				new UtilImpl().register(user);
+			
 				
 			}
 

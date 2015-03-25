@@ -79,6 +79,7 @@ public class UserFrame extends JFrame{
 		this.add(leftPane);
 		this.add(rightPane);
 		
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setResizable(false);
 		this.setVisible(true);
 	}

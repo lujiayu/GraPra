@@ -69,7 +69,7 @@ public class ManagerImpl implements Manager{
 	public List<User> queryUser() {
 		// TODO Auto-generated method stub	
 		List<User> list =new ArrayList<User>();
-		String selectSql="select * from usertable " ;
+		String selectSql="select * from usertable where type=2" ;
 		//
 		try{
 			Statement stmt=conn.createStatement();
